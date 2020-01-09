@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  database:
+    container_name: database
+    image: mariadb
+    env_file: config/variables.env
+
+  wikifarm:
+    container_name: wikifarm
+    image: wikifarm
+    build: wikifarm
+    env_file: config/variables.env
+    ports:
+      - "80:80"
+    volumes:
+      - ./volumes/config:/var/www/wikifarm/config
+      - ./volumes/instances:/var/www/wikifarm/instances
