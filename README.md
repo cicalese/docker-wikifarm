@@ -46,6 +46,7 @@ To add a new wiki to the wikifarm, do the following:
 
 1. Run the create_wiki.sh script from the scripts directory. It takes one parameter: the name of the wiki.
 2. Copy the logo file (logo.png) into the instance branding directory at `instances/<wiki name>/branding`.
+3. Create a LocalSettings.php file in the `instances/<wiki name>` directory to configure the wiki instance.
 
 Note that, if you have just built the wiki farm, you will need to wait a few minutes to let the database come
 up before creating a wiki.
