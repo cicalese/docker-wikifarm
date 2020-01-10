@@ -14,6 +14,7 @@ COPY files/index.php /var/www/html
 RUN mkdir /var/www/scripts
 COPY files/create_wiki.sh /var/www/scripts
 COPY files/create_wiki.php /var/www/scripts
+COPY files/mk-favicon.sh /var/www/scripts
 
 RUN a2disconf short-url
 
