@@ -14,6 +14,7 @@ This directory contains the scripts used to build and manage the wiki farm. They
 1. clean.sh: remove only the database and wikifarm images and containers and prune unused containers
 1. status.sh: list all images and containers
 1. create_wiki.sh: create a wiki on the wikifarm
+1. mk-favicon.sh: creates a favicon.ico file from the logo.png file for a wiki
 
 ### config
 
@@ -46,6 +47,9 @@ To add a new wiki to the wikifarm, do the following:
 
 1. Run the create_wiki.sh script from the scripts directory. It takes one parameter: the name of the wiki. (Note that if you
    have just built the wiki farm, you will need to wait a few minutes to let the database come up before creating a wiki.)
-2. Copy the logo file (logo.png) into the instance branding directory at `instances/<wiki name>/branding`.
-3. Create a LocalSettings.php file in the `instances/<wiki name>` directory to configure the wiki instance.
+1. Copy your logo file (logo.png) into the instance branding directory at `instances/<wiki name>/branding`.
+1. Copy your favicon file (favicon.ico) into the instance branding directory at `instances/<wiki name>/branding` or use the
+   mk-favicon.sh script to generate a favicon.ico file from your logo.png file. The latter takes one parameter: the name of
+   the wiki.
+1. Create a LocalSettings.php file in the `instances/<wiki name>` directory to configure the wiki instance.
 
