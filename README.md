@@ -27,7 +27,8 @@ This directory contains files that can be edited before the wiki farm is built t
 
 This directory contains volumes that are shared between the host and the wikifarm container. They include:
 
-1. config: MediaWiki configuration files, including Config.php, which is copied from the config directory
+1. config: MediaWiki configuration files, including Config.php, which is copied from the `config` directory to the
+   `volumes\config` directory by build_wikifarm.sh
 1. instances: instance files for the wikis, including configuration, branding (i.e. logo and favicon), and images
 
 ### wikifarm
@@ -47,9 +48,9 @@ To add a new wiki to the wikifarm, do the following:
 
 1. Run the create_wiki.sh script from the scripts directory. It takes one parameter: the name of the wiki. (Note that if you
    have just built the wiki farm, you will need to wait a few minutes to let the database come up before creating a wiki.)
-1. Copy your logo file (logo.png) into the instance branding directory at `instances/<wiki name>/branding`.
-1. Copy your favicon file (favicon.ico) into the instance branding directory at `instances/<wiki name>/branding` or use the
-   mk-favicon.sh script to generate a favicon.ico file from your logo.png file. The latter takes one parameter: the name of
-   the wiki.
-1. Create a LocalSettings.php file in the `instances/<wiki name>` directory to configure the wiki instance.
+1. Copy your logo file (logo.png) into the instance branding directory at `volumes/instances/<wiki name>/branding`.
+1. Copy your favicon file (favicon.ico) into the instance branding directory at `volumes/instances/<wiki name>/branding`
+   or use the mk-favicon.sh script to generate a favicon.ico file from your logo.png file. The latter takes one parameter:
+   the name of the wiki.
+1. Create a LocalSettings.php file in the `volumes/instances/<wiki name>` directory to configure the wiki instance.
 
