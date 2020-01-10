@@ -29,7 +29,7 @@ This directory contains volumes that are shared between the host and the wikifar
 
 1. `config`: MediaWiki configuration files, including `Config.php`, which is copied from the `config` directory to the
    `volumes\config` directory by build_wikifarm.sh
-1. instances: instance files for the wikis, including configuration, branding (i.e. logo and favicon), and images
+1. `instances`: instance files for the wikis, including configuration, branding (i.e. logo and favicon), and images
 
 ### wikifarm
 
