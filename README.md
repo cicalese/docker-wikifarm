@@ -11,15 +11,22 @@ The repo has the following directories:
 This directory contains the scripts used to build and manage the wiki farm.
 They include:
 
-1. `build_wikifarm.sh`: build the wiki farm containers
+1. `build_wikifarm.sh`: build the wiki farm containers for one MediaWiki
+version (1.31, 1.32, 1.33, 1.34, or master)
+1. `build_all.sh`: build the wiki farm containers for all supported
+MediaWiki versions
+1. `create_wiki.sh`: create a wiki on the wikifarm
+1. `mk-favicon.sh`: creates a `favicon.ico` file from the `logo.png` file for
+a wiki
+1. `move_wiki.sh`: move a wiki from one wiki farm container to another
+(note that this script does not run the update maintenance script; use
+`run_update.sh` after moving the wiki if it needs to be updated)
+1. `run_update.sh`: run the update maintenance script on one wiki
+1. `status.sh`: list all images and containers
 1. `clean_all.sh`: remove all images and containers generated from the build
 and prune unused containers
 1. `clean.sh`: remove only the database and wikifarm images and containers and
 prune unused containers
-1. `status.sh`: list all images and containers
-1. `create_wiki.sh`: create a wiki on the wikifarm
-1. `mk-favicon.sh`: creates a `favicon.ico` file from the `logo.png` file for
-a wiki
 
 ### config
 
@@ -35,7 +42,7 @@ This directory contains volumes that are shared between the host and the
 wikifarm container. They include:
 
 1. `config`: MediaWiki configuration files, including `Config.php`, which is
-copied from the `config` directory to the `volumes\config` directory by
+copied from the `config` directory to the `volumes/config` directory by
 build_wikifarm.sh
 1. `instances`: instance files for the wikis, including configuration, branding
 (i.e. logo and favicon), and images

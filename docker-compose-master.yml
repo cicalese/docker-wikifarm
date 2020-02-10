@@ -16,6 +16,6 @@ services:
     ports:
       - "${MW_PORT}:80"
     volumes:
-      - ./volumes/config:/var/www/wikifarm/config
+      - ./volumes/config/master:/var/www/wikifarm/config
+      - ./volumes/extensions/master:/var/www/mediawiki/extensions
       - ./volumes/instances:/var/www/wikifarm/instances
-      - ./volumes/extensions:/var/www/mediawiki/extensions

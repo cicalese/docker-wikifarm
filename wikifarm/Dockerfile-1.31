@@ -1,4 +1,4 @@
-FROM mediawiki:lts AS wikifarm
+FROM mediawiki:1.31 AS wikifarm
 
 WORKDIR /var/www/wikifarm
 COPY files/LocalSettings_wikifarm.php /var/www/wikifarm/LocalSettings.php
