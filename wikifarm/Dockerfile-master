@@ -1,0 +1,112 @@
+FROM php:7.3-apache
+
+# System dependencies
+RUN set -eux; \
+	\
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		git \
+		librsvg2-bin \
+		imagemagick \
+		# Required for SyntaxHighlighting
+		python3 \
+		git \
+	; \
+	rm -rf /var/lib/apt/lists/*
+
+# Install the PHP extensions we need
+RUN set -eux; \
+	\
+	savedAptMark="$(apt-mark showmanual)"; \
+	\
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		libicu-dev \
+		zlib1g-dev \
+		libzip-dev \
+		libxml2-dev \
+		zip \
+	; \
+	\
+	docker-php-ext-install -j "$(nproc)" \
+		intl \
+		mbstring \
+		mysqli \
+		opcache \
+		zip \
+		xml \
+		json \
+	; \
+	\
+	pecl install apcu-5.1.18; \
+	docker-php-ext-enable \
+		apcu \
+	; \
+	\
+	# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
+	apt-mark auto '.*' > /dev/null; \
+	apt-mark manual $savedAptMark; \
+	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
+		| awk '/=>/ { print $3 }' \
+		| sort -u \
+		| xargs -r dpkg-query -S \
+		| cut -d: -f1 \
+		| sort -u \
+		| xargs -rt apt-mark manual; \
+	\
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	rm -rf /var/lib/apt/lists/*
+
+# set recommended PHP.ini settings
+# see https://secure.php.net/manual/en/opcache.installation.php
+RUN { \
+		echo 'opcache.memory_consumption=128'; \
+		echo 'opcache.interned_strings_buffer=8'; \
+		echo 'opcache.max_accelerated_files=4000'; \
+		echo 'opcache.revalidate_freq=60'; \
+		echo 'opcache.fast_shutdown=1'; \
+	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+WORKDIR /var/www/wikifarm
+
+RUN set -eux; \
+	cd /var/www; \
+	git clone --depth 1 https://gerrit.wikimedia.org/r/mediawiki/core.git mediawiki; \
+	cd mediawiki; \
+	git submodule update --init; \
+	cd skins ; \
+	git clone --depth 1 https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git Vector; \
+	git clone --depth 1 https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git; \
+	git clone --depth 1 https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git; \
+	cd /var/www/mediawiki; \
+	chown -R www-data:www-data extensions skins cache images
+
+RUN set -eux; \
+	mkdir /usr/local/composer; \
+	cd /usr/local/composer; \
+	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"; \
+	php -r "if (hash_file('sha384', 'composer-setup.php') === 'c5b9b6d368201a9db6f74e2611495f369991b72d9c8cbd3ffbc63edff210eb73d46ffbfce88669ad33695ef77dc76976') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"; \
+	php composer-setup.php; \
+	php -r "unlink('composer-setup.php');"; \
+	cd /var/www/mediawiki; \
+	php /usr/local/composer/composer.phar install
+
+COPY files/LocalSettings_wikifarm.php /var/www/wikifarm/LocalSettings.php
+COPY files/Keys.php /var/www/wikifarm/Keys.php
+RUN sed -i -e "s/%%SECRET_KEY%%/`od -N 32 -An -vx  /dev/urandom | tr '\n' ' ' | sed -e 's/ //g'`/" /var/www/wikifarm/Keys.php
+
+RUN mv /var/www/html /var/www/mediawiki
+COPY files/LocalSettings_mediawiki.php /var/www/mediawiki/LocalSettings.php
+
+RUN mkdir /var/www/html
+COPY files/index.php /var/www/html
+
+RUN mkdir /var/www/scripts
+COPY files/create_wiki.sh /var/www/scripts
+COPY files/create_wiki.php /var/www/scripts
+COPY files/mk-favicon.sh /var/www/scripts
+
+COPY files/wikifarm.conf /etc/apache2/conf-available
+RUN a2enconf wikifarm
+
+RUN service apache2 restart
