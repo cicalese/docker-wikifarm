@@ -30,7 +30,7 @@ then
 	exit 1
 fi
 
-php /var/www/scripts/create_wiki.php ${WIKI_NAME} ${MEDIAWIKI_WIKI_ADMIN_USER} \
+php /root/scripts/create_wiki.php ${WIKI_NAME} ${MEDIAWIKI_WIKI_ADMIN_USER} \
   --pass ${MEDIAWIKI_WIKI_ADMIN_PASSWORD} \
   --dbuser root \
   --dbpass ${MYSQL_ROOT_PASSWORD} \

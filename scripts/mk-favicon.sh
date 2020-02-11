@@ -10,4 +10,4 @@ fi
 WIKI_NAME=$1
 MW_VERSION=$2
 
-docker exec -it -e WIKI_NAME=${WIKI_NAME} -w /var/www/wikifarm/instances/${WIKI_NAME}/branding wikifarm-${MW_VERSION} /var/www/scripts/mk-favicon.sh ${WIKI_NAME}
+docker exec -it -e WIKI_NAME=${WIKI_NAME} -w /var/www/wikifarm/instances/${WIKI_NAME}/branding wikifarm-${MW_VERSION} /root/scripts/mk-favicon.sh ${WIKI_NAME}

@@ -1,5 +1,8 @@
 FROM php:7.3-apache
 
+ENV MEDIAWIKI_BRANCH master
+ENV MEDIAWIKI_MAJOR_VERSION 1.35
+
 # System dependencies
 RUN set -eux; \
 	\
@@ -67,7 +70,13 @@ RUN { \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-WORKDIR /var/www/wikifarm
+WORKDIR /root/scripts
+
+COPY files/create_wiki.sh /root/scripts
+COPY files/create_wiki.php /root/scripts
+COPY files/mk-favicon.sh /root/scripts
+
+RUN mkdir /var/www/wikifarm
 
 RUN set -eux; \
 	cd /var/www; \
@@ -100,11 +109,6 @@ COPY files/LocalSettings_mediawiki.php /var/www/mediawiki/LocalSettings.php
 
 RUN mkdir /var/www/html
 COPY files/index.php /var/www/html
-
-RUN mkdir /var/www/scripts
-COPY files/create_wiki.sh /var/www/scripts
-COPY files/create_wiki.php /var/www/scripts
-COPY files/mk-favicon.sh /var/www/scripts
 
 COPY files/wikifarm.conf /etc/apache2/conf-available
 RUN a2enconf wikifarm

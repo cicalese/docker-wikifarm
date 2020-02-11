@@ -3,8 +3,12 @@ version: '3'
 services:
   database:
     container_name: database
-    image: mariadb
+    image: database
+    build:
+      context: database
     env_file: config/variables.env
+    volumes:
+      - ./volumes/backups:/root/backups
 
   wikifarm-1.33:
     container_name: wikifarm-1.33

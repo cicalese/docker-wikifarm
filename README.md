@@ -19,6 +19,7 @@ MediaWiki versions
 1. `mk-favicon.sh`: creates a `favicon.ico` file from the `logo.png` file for
 a wiki
 1. `move_wiki.sh`: move a wiki from one wiki farm container to another
+1. `backup_wiki_database.sh`: create a SQL dump of a wiki in `volumes/backups`
 1. `disable_wiki`: disable a wiki on a wiki farm (this does not remove the
 database)
 1. `run_update.sh`: run the update maintenance script on one wiki
@@ -48,8 +49,9 @@ copied from the `config` directory to the `volumes/config` directory by
 build_wikifarm.sh
 1. `instances`: instance files for the wikis, including configuration, branding
 (i.e. logo and favicon), and images
-1. `extensions`: the extensions directory. This allows you to manage extensions
-on the host.
+1. `extensions`: the extensions directory, allowing management of extensions
+on the host
+1. `backups`: wiki SQL dumps created by the `backup_wiki_database.sh` script 
 
 ### wikifarm
 

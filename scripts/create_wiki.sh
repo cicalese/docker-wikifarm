@@ -11,7 +11,7 @@ WIKI_NAME=$1
 MW_VERSION=$2
 
 # run install script
-docker exec -it -e WIKI_NAME=${WIKI_NAME} wikifarm-${MW_VERSION} /var/www/scripts/create_wiki.sh ${WIKI_NAME}
+docker exec -it -e WIKI_NAME=${WIKI_NAME} wikifarm-${MW_VERSION} /root/scripts/create_wiki.sh ${WIKI_NAME}
 
 # copy, edit, and enable wiki apache configuration file; reload apache
 docker cp wikifarm/files/wikifarm_instance.conf wikifarm-${MW_VERSION}:/etc/apache2/conf-available/wikifarm_${WIKI_NAME}.conf
