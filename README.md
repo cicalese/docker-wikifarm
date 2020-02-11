@@ -19,14 +19,16 @@ MediaWiki versions
 1. `mk-favicon.sh`: creates a `favicon.ico` file from the `logo.png` file for
 a wiki
 1. `move_wiki.sh`: move a wiki from one wiki farm container to another
-(note that this script does not run the update maintenance script; use
-`run_update.sh` after moving the wiki if it needs to be updated)
+1. `disable_wiki`: disable a wiki on a wiki farm (this does not remove the
+database)
 1. `run_update.sh`: run the update maintenance script on one wiki
 1. `status.sh`: list all images and containers
 1. `clean_all.sh`: remove all images and containers generated from the build
 and prune unused containers
 1. `clean.sh`: remove only the database and wikifarm images and containers and
 prune unused containers
+1. `wiki_shell.sh`: open a bash command prompt on a wiki farm
+1. `database_shell.sh`: open a MySQL shell on the database host
 
 ### config
 
@@ -59,6 +61,7 @@ container.
 To build the wikifarm, do the following:
 
 1. Edit the files in the `config` directory at the top level of the repository.
+Especially change the passwords in `config/variables.env`.
 1. Run the `build_wikifarm.sh` script that is in the scripts directory. It
 takes two parameters: the MediaWiki version (i.e. 1.31, 1.32, 1.33, 1.34, or
 master) and the host port to use to communicate with the wiki farm web server.
@@ -80,4 +83,7 @@ to generate a `favicon.ico` file from your `logo.png` file. The latter takes
 two parameters: the name of the wiki and the MediaWiki version of the wiki
 farm.
 1. Create a `LocalSettings.php` file in the `volumes/instances/<wiki name>`
-directory to configure the wiki instance.
+directory to configure the wiki instance. The instance `LocalSettings.php` file
+will be called from the end of the wiki farm `LocalSettings.php` file. The
+content of the latter file can be examined at
+'wikifarm/files/LocalSettings_wikifarm.php`.

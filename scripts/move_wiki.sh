@@ -21,3 +21,6 @@ docker cp wikifarm/files/wikifarm_instance.conf wikifarm-${TO_MW_VERSION}:/etc/a
 docker exec -it wikifarm-${TO_MW_VERSION} sed -i -e "s/%%WIKI_NAME%%/${WIKI_NAME}/g" /etc/apache2/conf-available/wikifarm_${WIKI_NAME}.conf
 docker exec -it wikifarm-${TO_MW_VERSION} a2enconf wikifarm_${WIKI_NAME}
 docker exec -it wikifarm-${TO_MW_VERSION} service apache2 reload
+
+# run update script
+docker exec -it -e WIKI_NAME=${WIKI_NAME} wikifarm-${TO_MW_VERSION} php /var/www/mediawiki/maintenance/update.php --quick

@@ -16,14 +16,21 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-# Make sure the required environment variables are set
-$requiredEnvVars = [
+# Make sure the required server and environment variables are set
+$requiredSrvVars = [
 	'WIKI_NAME',
+];
+foreach ( $requiredSrvVars as $var ) {
+	if ( !isset( $_SERVER[$var] ) ) {
+		die( $var . " is not set." . PHP_EOL );
+	}
+}
+$requiredEnvVars = [
 	'MYSQL_ROOT_PASSWORD',
-	'MEDIAWIKI_WIKIFARM_BASE_URL'
+	'MEDIAWIKI_WIKIFARM_BASE_URL_NO_PORT'
 ];
 foreach ( $requiredEnvVars as $var ) {
-	if ( !isset( $_SERVER[$var] ) && !isset( $_ENV[$var] ) ) {
+	if ( !isset( $_ENV[$var] ) ) {
 		die( $var . " is not set." . PHP_EOL );
 	}
 }
@@ -32,7 +39,10 @@ $wgSitename = $_SERVER['WIKI_NAME'];
 $wgMetaNamespace = $wgSitename;
 $wgScriptPath = "/$wgSitename";
 $wgResourceBasePath = $wgScriptPath;
-$wgServer = $_ENV['MEDIAWIKI_WIKIFARM_BASE_URL'];
+$wgServer = $_ENV['MEDIAWIKI_WIKIFARM_BASE_URL_NO_PORT'];
+if ( isset( $_ENV['MEDIAWIKI_PORT'] ) ) {
+	$wgServer = $wgServer . ':' . $_ENV['MEDIAWIKI_PORT'];
+}
 
 $wgDBtype = "mysql";
 $wgDBserver = "database";
