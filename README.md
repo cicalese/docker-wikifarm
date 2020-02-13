@@ -1,7 +1,8 @@
 # docker-wikifarm
-docker-wikifarm uses docker compose to build and manage a MediaWiki wiki farm.
-The wiki farm runs in two docker containers: one for the database and one for
-the web server and MediaWiki.
+docker-wikifarm uses docker compose to build and manage MediaWiki wiki farms.
+It optionally supports multiple MediaWiki versions side by side. The wiki farms
+run in two (or more) docker containers: one for the database and one for each
+MediaWiki version (including the web server and MediaWiki).
 
 ## Files
 The repo has the following directories:
