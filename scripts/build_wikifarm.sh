@@ -11,10 +11,8 @@ if [ "$#" -lt 2 ]; then
 else
 	MW_PORT=$2
 fi
-if [ ! -f $(dirname $0)/../volumes/config/${1}/Config.php ]
-then
-	if [ ! -d $(dirname $0)/../volumes/config/${1} ]
-	then
+if [ ! -f $(dirname $0)/../volumes/config/${1}/Config.php ]; then
+	if [ ! -d $(dirname $0)/../volumes/config/${1} ]; then
 		mkdir $(dirname $0)/../volumes/config/${1}
 	fi
 	cp $(dirname $0)/../config/Config.php $(dirname $0)/../volumes/config/${1}
