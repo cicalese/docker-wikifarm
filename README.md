@@ -23,6 +23,7 @@ a wiki
 1. `disable_wiki`: disable a wiki on a wiki farm (this does not remove the
 database)
 1. `run_update.sh`: run the update maintenance script on one wiki
+1. `patch_master.sh`: applies a gerrit patch to wikifarm-master and runs update
 1. `status.sh`: list all images and containers
 1. `clean_all.sh`: remove all images and containers generated from the build
 and prune unused containers
@@ -73,8 +74,8 @@ master) and the host port to use to communicate with the wiki farm web server.
 To add a new wiki to the wikifarm, do the following:
 
 1. Run the `create_wiki.sh` script from the scripts directory. It takes two
-parameters: the name of the wiki and the MediaWiki version of the wiki farm
-(i.e. 1.31, 1.32, 1.33, 1.34, or master). (Note that if you have just built
+parameters: the MediaWiki version of the wiki farm (i.e. 1.31, 1.32, 1.33,
+1.34, or master) and the name of the wiki. (Note that if you have just built
 the wiki farm, you will need to wait a few minutes to let the database come up
 before creating a wiki.)
 1. Copy the logo file (`logo.png`) into the instance branding directory at
