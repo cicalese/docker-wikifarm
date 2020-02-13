@@ -1,3 +1,6 @@
+- Protect databases from being overwritte in creation/move
+- Script to list wikis on a wiki farm
+- Script to list all wikis on all wiki farms
+- Restore
 - Extensions and skins
-- Backup/restore
 - SSL
