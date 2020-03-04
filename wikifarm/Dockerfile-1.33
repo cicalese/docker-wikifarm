@@ -2,6 +2,11 @@ FROM mediawiki:1.33 AS wikifarm
 
 WORKDIR /root/scripts
 
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends composer; \
+	rm -rf /var/lib/apt/lists/*
+
 COPY files/create_wiki.sh /root/scripts
 COPY files/create_wiki.php /root/scripts
 COPY files/mk-favicon.sh /root/scripts

@@ -14,6 +14,7 @@ RUN set -eux; \
 		# Required for SyntaxHighlighting
 		python3 \
 		git \
+		composer \
 	; \
 	rm -rf /var/lib/apt/lists/*
 

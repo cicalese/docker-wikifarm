@@ -10,6 +10,7 @@ RUN set -eux; \
 		imagemagick \
 		# Required for SyntaxHighlighting
 		python3 \
+		composer \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
