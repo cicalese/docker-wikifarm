@@ -18,6 +18,18 @@ COMPOSER_EXTENSIONS=(
 	"mediawiki/semantic-scribunto:2.1.0"
 )
 
+GIT_RELEASE_BRANCH_EXTENSIONS=(
+	"ParserFunctions"
+	"ReplaceText"
+	"Scribunto"
+	"WikiEditor"
+	"CodeEditor"
+	"HeaderTabs"
+	"Variables"
+	"UrlGetParameters"
+	"Echo"
+)
+
 GIT_MASTER_EXTENSIONS=(
 	"JSBreadCrumbs"
 	"Arrays"
@@ -32,29 +44,13 @@ GIT_MASTER_EXTENSIONS=(
 	"Cargo"
 )
 
-GIT_RELEASE_BRANCH_EXTENSIONS=(
-	"ReplaceText"
-	"Scribunto"
-	"CodeEditor"
-	"HeaderTabs"
-	"Variables"
-	"UrlGetParameters"
-	"Echo"
-)
-
 for i in "${COMPOSER_EXTENSIONS[@]}"
 do
 	echo $i
-	#docker exec -it -w ${MW_DIR} wikifarm-${MW_VERSION} sh -c "composer require -q $i"
+	docker exec -it -w ${MW_DIR} wikifarm-${MW_VERSION} sh -c "composer require $i"
 done
 
 GIT_URL="https://gerrit.wikimedia.org/r/mediawiki/extensions/"
-
-for i in "${GIT_MASTER_EXTENSIONS[@]}"
-do
-	echo $i
-	docker exec -it -w ${MW_DIR}/extensions wikifarm-${MW_VERSION} sh -c "if [ ! -d \"$i\" ]; then git clone ${GIT_URL}/${i}.git; fi"
-done
 
 case $MW_VERSION in
 	1.31)
@@ -78,4 +74,10 @@ for i in "${GIT_RELEASE_BRANCH_EXTENSIONS[@]}"
 do
 	echo $i
 	docker exec -it -w ${MW_DIR}/extensions wikifarm-${MW_VERSION} sh -c "if [ ! -d \"$i\" ]; then git clone ${GIT_URL}/${i}.git --branch ${MW_BRANCH}; fi"
+done
+
+for i in "${GIT_MASTER_EXTENSIONS[@]}"
+do
+	echo $i
+	docker exec -it -w ${MW_DIR}/extensions wikifarm-${MW_VERSION} sh -c "if [ ! -d \"$i\" ]; then git clone ${GIT_URL}/${i}.git; fi"
 done

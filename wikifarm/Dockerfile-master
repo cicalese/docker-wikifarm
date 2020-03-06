@@ -2,9 +2,34 @@ FROM php:7.3-apache
 
 ENV MEDIAWIKI_BRANCH master
 
-# System dependencies
 RUN set -eux; \
-	\
+	rm /etc/apt/preferences.d/no-debian-php; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		composer \
+		lua5.1 \
+		lua5.1-dev \
+		libxml2-dev \
+		pkg-config \
+		php-xml \
+		php-dom \
+		zip \
+		unzip \
+		make \
+		; \
+	docker-php-ext-install -j "$(nproc)" \
+		dom \
+		xml \
+		; \
+	pecl install \
+		luasandbox \
+		; \
+	docker-php-ext-enable \
+		luasandbox \
+		; \
+	rm -rf /var/lib/apt/lists/*
+
+RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		git \
@@ -13,9 +38,7 @@ RUN set -eux; \
 		imagemagick \
 		# Required for SyntaxHighlighting
 		python3 \
-		git \
-		composer \
-	; \
+		; \
 	rm -rf /var/lib/apt/lists/*
 
 # Install the PHP extensions we need
@@ -28,9 +51,6 @@ RUN set -eux; \
 		libicu-dev \
 		zlib1g-dev \
 		libzip-dev \
-		libxml2-dev \
-		zip \
-		unzip \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -94,15 +114,8 @@ RUN set -eux; \
 	chown -R www-data:www-data extensions skins cache images
 
 RUN set -eux; \
-	mkdir /usr/local/composer; \
-	cd /usr/local/composer; \
-	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"; \
-	CHECKSUM=`curl https://composer.github.io/installer.sig`; \
-	php -r "if (hash_file('sha384', 'composer-setup.php') === \"$CHECKSUM\") { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"; \
-	php composer-setup.php; \
-	php -r "unlink('composer-setup.php');"; \
 	cd /var/www/mediawiki; \
-	php /usr/local/composer/composer.phar install
+	composer install
 
 COPY files/LocalSettings_wikifarm.php /var/www/wikifarm/LocalSettings.php
 COPY files/Keys.php /var/www/wikifarm/Keys.php

@@ -1,8 +1,7 @@
 FROM php:7.2-apache AS wikifarm
 
-# System dependencies
 RUN set -eux; \
-	\
+	rm /etc/apt/preferences.d/no-debian-php; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		git \
@@ -11,7 +10,26 @@ RUN set -eux; \
 		# Required for SyntaxHighlighting
 		python3 \
 		composer \
-	; \
+		lua5.1 \
+		lua5.1-dev \
+		libxml2-dev \
+		pkg-config \
+		php-xml \
+		php-dom \
+		zip \
+		unzip \
+		make \
+		; \
+	docker-php-ext-install -j "$(nproc)" \
+		dom \
+		xml \
+		; \
+	pecl install \
+		luasandbox \
+		; \
+	docker-php-ext-enable \
+		luasandbox \
+		; \
 	rm -rf /var/lib/apt/lists/*
 
 # Install the PHP extensions we need

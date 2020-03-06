@@ -3,8 +3,30 @@ FROM mediawiki:1.34 AS wikifarm
 WORKDIR /root/scripts
 
 RUN set -eux; \
+	rm /etc/apt/preferences.d/no-debian-php; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends composer; \
+	apt-get install -y --no-install-recommends \
+		composer \
+		lua5.1 \
+		lua5.1-dev \
+		libxml2-dev \
+		pkg-config \
+		php-xml \
+		php-dom \
+		zip \
+		unzip \
+		make \
+		; \
+	docker-php-ext-install -j "$(nproc)" \
+		dom \
+		xml \
+		; \
+	pecl install \
+		luasandbox \
+		; \
+	docker-php-ext-enable \
+		luasandbox \
+		; \
 	rm -rf /var/lib/apt/lists/*
 
 COPY files/create_wiki.sh /root/scripts
@@ -14,7 +36,7 @@ COPY files/mk-favicon.sh /root/scripts
 RUN mkdir /var/www/wikifarm
 COPY files/LocalSettings_wikifarm.php /var/www/wikifarm/LocalSettings.php
 COPY files/Keys.php /var/www/wikifarm/Keys.php
-RUN sed -i -e "s/%%SECRET_KEY%%/`od -N 32 -An -vx  /dev/urandom | tr '\n' ' ' | sed -e 's/ //g'`/" /var/www/wikifarm/Keys.php
+RUN sed -i -e "s/%%SECRET_KEY%%/`od -N 32 -An -vx /dev/urandom | tr '\n' ' ' | sed -e 's/ //g'`/" /var/www/wikifarm/Keys.php
 
 RUN mv /var/www/html /var/www/mediawiki
 COPY files/LocalSettings_mediawiki.php /var/www/mediawiki/LocalSettings.php
