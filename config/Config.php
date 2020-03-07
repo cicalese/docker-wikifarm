@@ -22,9 +22,12 @@ $wgEmailAuthentication = true;
 $wgMainCacheType = CACHE_ACCEL;
 $wgMemCachedServers = [];
 
-## To enable image uploads, make sure the 'images' directory
-## is writable, then set this to true:
-$wgEnableUploads = false;
+## Image uploads
+$wgEnableUploads = true;
+$wgUploadPath = "$wgScriptPath/img_auth.php";
+$wgImgAuthPublicTest = false;
+$wgUploadDirectory = "$INSTANCE_DIR/images";
+$wgTmpDirectory = "$INSTANCE_DIR/images/temp";
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 

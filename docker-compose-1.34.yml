@@ -24,4 +24,5 @@ services:
     volumes:
       - ./volumes/config/1.34:/var/www/wikifarm/config
       - ./volumes/extensions/1.34:/var/www/mediawiki/extensions
+      - ./volumes/skins/1.34:/var/www/mediawiki/skins
       - ./volumes/instances:/var/www/wikifarm/instances
