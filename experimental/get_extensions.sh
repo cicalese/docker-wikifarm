@@ -68,7 +68,7 @@ COMPOSER_EXTENSIONS=(
 	"mediawiki/semantic-result-formats:3.1.0"
 	"mediawiki/semantic-extra-special-properties:2.1.0"
 	"mediawiki/semantic-scribunto:2.1.0"
-	"mediawiki/mermaid:~2.1"
+	"mediawiki/mermaid:2.2.0"
 	"mediawiki/user-functions:2.7.0"
 )
 
