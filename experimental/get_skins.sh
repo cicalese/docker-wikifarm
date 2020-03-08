@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 
 if [ "$#" -ne 1 ]; then
@@ -22,7 +22,7 @@ GIT_MASTER_SKINS=(
 )
 
 COMPOSER_SKINS=(
-	"mediawiki/chameleon-skin:~2.1"
+	"mediawiki/chameleon-skin:2.1.0"
 )
 
 GIT_URL="https://gerrit.wikimedia.org/r/mediawiki/skins/"
