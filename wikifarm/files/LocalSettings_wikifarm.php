@@ -40,7 +40,7 @@ $wgMetaNamespace = $wgSitename;
 $wgScriptPath = "/$wgSitename";
 $wgResourceBasePath = $wgScriptPath;
 $wgServer = $_ENV['MEDIAWIKI_WIKIFARM_BASE_URL_NO_PORT'];
-if ( isset( $_ENV['MEDIAWIKI_PORT'] ) ) {
+if ( isset( $_ENV['MEDIAWIKI_PORT'] ) && ( $_ENV['MEDIAWIKI_PORT'] != '80' ) ) {
 	$wgServer = $wgServer . ':' . $_ENV['MEDIAWIKI_PORT'];
 }
 
