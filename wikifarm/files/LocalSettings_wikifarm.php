@@ -52,19 +52,28 @@ $wgDBpassword = $_ENV['MYSQL_ROOT_PASSWORD'];
 $wgDBprefix = "";
 $wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
 
+$wgExtensionDirectory = "/var/www/wikifarm/extensions";
+$wgStyleDirectory = "/var/www/wikifarm/skins";
+
 $INSTANCE_DIR = "/var/www/wikifarm/instances/" . $wgSitename;
-if( file_exists( "$INSTANCE_DIR/branding/logo.png" ) ) {
+if ( file_exists( "$INSTANCE_DIR/branding/logo.png" ) ) {
   $wgLogo = "$wgServer/$wgSitename/branding/logo.png";
 } else {
   $wgLogo = "$wgResourceBasePath/resources/assets/wiki.png";
 }
-if( file_exists( "$INSTANCE_DIR/branding/favicon.ico" ) ) {
+if ( file_exists( "$INSTANCE_DIR/branding/favicon.ico" ) ) {
   $wgFavicon = "$wgServer/$wgSitename/branding/favicon.ico";
 }
 
 require_once( "/var/www/wikifarm/Keys.php" );
 require_once( "/var/www/wikifarm/config/Config.php" );
+if ( file_exists( "/var/www/wikifarm/config/WikiFarmSkins.php" ) ) {
+	require_once( "/var/www/wikifarm/config/WikiFarmSkins.php" );
+}
+if ( file_exists( "/var/www/wikifarm/config/WikiFarmExtensions.php" ) ) {
+	require_once( "/var/www/wikifarm/config/WikiFarmExtensions.php" );
+}
 
-if( file_exists( "$INSTANCE_DIR/LocalSettings.php" ) ) {
+if ( file_exists( "$INSTANCE_DIR/LocalSettings.php" ) ) {
 	require_once( "$INSTANCE_DIR/LocalSettings.php" );
 }

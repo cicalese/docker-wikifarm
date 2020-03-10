@@ -96,6 +96,7 @@ RUN set -eux; \
 	tar -x --strip-components=1 -f mediawiki.tar.gz; \
 	rm mediawiki.tar.gz; \
 	chown -R www-data:www-data extensions skins cache images
+RUN mv /var/www/html /var/www/mediawiki
 
 WORKDIR /root/scripts
 
@@ -103,16 +104,14 @@ COPY files/create_wiki.sh /root/scripts
 COPY files/create_wiki.php /root/scripts
 COPY files/mk-favicon.sh /root/scripts
 
+COPY files/LocalSettings_mediawiki.php /var/www/mediawiki/LocalSettings.php
+
 RUN mkdir /var/www/wikifarm
 COPY files/LocalSettings_wikifarm.php /var/www/wikifarm/LocalSettings.php
 COPY files/Keys.php /var/www/wikifarm/Keys.php
-RUN sed -i -e "s/%%SECRET_KEY%%/`od -N 32 -An -vx  /dev/urandom | tr '\n' ' ' | sed -e 's/ //g'`/" /var/www/wikifarm/Keys.php
+RUN sed -i -e "s/%%SECRET_KEY%%/`od -N 32 -An -vx /dev/urandom | tr '\n' ' ' | sed -e 's/ //g'`/" /var/www/wikifarm/Keys.php
 
-RUN mv /var/www/html /var/www/mediawiki
-COPY files/LocalSettings_mediawiki.php /var/www/mediawiki/LocalSettings.php
-
-RUN mkdir /var/www/html
-COPY files/index.php /var/www/html
+COPY files/index.php /var/www/html/index.php
 
 COPY files/wikifarm.conf /etc/apache2/conf-available
 RUN a2enconf wikifarm

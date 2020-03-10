@@ -93,14 +93,6 @@ RUN { \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-WORKDIR /root/scripts
-
-COPY files/create_wiki.sh /root/scripts
-COPY files/create_wiki.php /root/scripts
-COPY files/mk-favicon.sh /root/scripts
-
-RUN mkdir /var/www/wikifarm
-
 RUN set -eux; \
 	cd /var/www; \
 	git clone https://gerrit.wikimedia.org/r/mediawiki/core.git mediawiki; \
@@ -108,8 +100,6 @@ RUN set -eux; \
 	git submodule update --init; \
 	cd skins ; \
 	git clone https://gerrit.wikimedia.org/r/mediawiki/skins/Vector.git; \
-	git clone https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook.git; \
-	git clone https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless.git; \
 	cd /var/www/mediawiki; \
 	chown -R www-data:www-data extensions skins cache images
 
@@ -117,15 +107,20 @@ RUN set -eux; \
 	cd /var/www/mediawiki; \
 	composer install
 
-COPY files/LocalSettings_wikifarm.php /var/www/wikifarm/LocalSettings.php
-COPY files/Keys.php /var/www/wikifarm/Keys.php
-RUN sed -i -e "s/%%SECRET_KEY%%/`od -N 32 -An -vx  /dev/urandom | tr '\n' ' ' | sed -e 's/ //g'`/" /var/www/wikifarm/Keys.php
+WORKDIR /root/scripts
 
-RUN mv /var/www/html /var/www/mediawiki
+COPY files/create_wiki.sh /root/scripts
+COPY files/create_wiki.php /root/scripts
+COPY files/mk-favicon.sh /root/scripts
+
 COPY files/LocalSettings_mediawiki.php /var/www/mediawiki/LocalSettings.php
 
-RUN mkdir /var/www/html
-COPY files/index.php /var/www/html
+RUN mkdir /var/www/wikifarm
+COPY files/LocalSettings_wikifarm.php /var/www/wikifarm/LocalSettings.php
+COPY files/Keys.php /var/www/wikifarm/Keys.php
+RUN sed -i -e "s/%%SECRET_KEY%%/`od -N 32 -An -vx /dev/urandom | tr '\n' ' ' | sed -e 's/ //g'`/" /var/www/wikifarm/Keys.php
+
+COPY files/index.php /var/www/html/index.php
 
 COPY files/wikifarm.conf /etc/apache2/conf-available
 RUN a2enconf wikifarm

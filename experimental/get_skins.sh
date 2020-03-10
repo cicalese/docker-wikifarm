@@ -15,7 +15,6 @@ GIT_RELEASE_BRANCH_SKINS=(
 	# bundled skins
 	"MonoBook"
 	"Timeless"
-	"Vector"
 )
 
 GIT_MASTER_SKINS=(
@@ -45,20 +44,26 @@ case $MW_VERSION in
 		;;
 esac
 
-for i in "${GIT_RELEASE_BRANCH_SKINS[@]}"
-do
-	echo $i
-	docker exec -it -w ${MW_DIR}/skins wikifarm-${MW_VERSION} sh -c "if [ ! -d \"$i\" ]; then git clone ${GIT_URL}/${i}.git --branch ${MW_BRANCH}; fi"
-done
+if [ "${#GIT_RELEASE_BRANCH_SKINS[@]}" -gt 0 ]; then
+	for i in "${GIT_RELEASE_BRANCH_SKINS[@]}"
+	do
+		echo $i
+		docker exec -it -w ${MW_DIR}/skins wikifarm-${MW_VERSION} sh -c "if [ ! -d \"$i\" ]; then git clone ${GIT_URL}/${i}.git --branch ${MW_BRANCH}; fi"
+	done
+fi
 
-for i in "${GIT_MASTER_SKINS[@]}"
-do
-	echo $i
-	docker exec -it -w ${MW_DIR}/skins wikifarm-${MW_VERSION} sh -c "if [ ! -d \"$i\" ]; then git clone ${GIT_URL}/${i}.git; fi"
-done
+if [ "${#GIT_MASTER_SKINS[@]}" -gt 0 ]; then
+	for i in "${GIT_MASTER_SKINS[@]}"
+	do
+		echo $i
+		docker exec -it -w ${MW_DIR}/skins wikifarm-${MW_VERSION} sh -c "if [ ! -d \"$i\" ]; then git clone ${GIT_URL}/${i}.git; fi"
+	done
+fi
 
-for i in "${COMPOSER_SKINS[@]}"
-do
-	echo $i
-	docker exec -it -w ${MW_DIR} wikifarm-${MW_VERSION} sh -c "composer require $i"
-done
+if [ "${#COMPOSER_SKINS[@]}" -gt 0 ]; then
+	for i in "${COMPOSER_SKINS[@]}"
+	do
+		echo $i
+		docker exec -it -w ${MW_DIR} wikifarm-${MW_VERSION} sh -c "composer require $i"
+	done
+fi

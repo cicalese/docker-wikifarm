@@ -22,7 +22,7 @@ services:
     ports:
       - "${MW_PORT}:80"
     volumes:
-      - ./volumes/config/1.33:/var/www/wikifarm/config
-      - ./volumes/extensions/1.33:/var/www/mediawiki/extensions
-      - ./volumes/skins/1.33:/var/www/mediawiki/skins
+      - ./volumes/mediawiki/1.33/config:/var/www/wikifarm/config
+      - ./volumes/mediawiki/1.33/extensions:/var/www/wikifarm/extensions
+      - ./volumes/mediawiki/1.33/skins:/var/www/wikifarm/skins
       - ./volumes/instances:/var/www/wikifarm/instances
