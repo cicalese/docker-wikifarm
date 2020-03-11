@@ -10,7 +10,7 @@ fi
 MW_VERSION=$1
 MW_DIR="/var/www/mediawiki"
 
-GIT_URL="https://gerrit.wikimedia.org/r/mediawiki/extensions/"
+GIT_URL="https://gerrit.wikimedia.org/r/mediawiki/extensions"
 
 case $MW_VERSION in
 	1.31)
@@ -32,3 +32,5 @@ esac
 
 docker exec -it -w ${MW_DIR}/extensions wikifarm-${MW_VERSION} sh -c "if [ ! -d \"PhabTaskGraph\" ]; then git clone ${GIT_URL}/PhabTaskGraph.git; fi"
 docker exec -it wikifarm-${MW_VERSION} sh -c "apt update; apt install libphutil"
+
+docker exec -it wikifarm-${MW_VERSION} sh -c "chown -R www-data.www-data /var/www/wikifarm/extensions"

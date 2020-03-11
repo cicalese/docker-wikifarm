@@ -41,7 +41,6 @@ GIT_RELEASE_BRANCH_EXTENSIONS=(
 
 	# other release branch extensions
 	"Echo"
-	"HeaderTabs"
 	"PipeEscape"
 	"Variables"
 	"UrlGetParameters"
@@ -51,9 +50,11 @@ GIT_MASTER_EXTENSIONS=(
 	"Arrays"
 	"Cargo"
 	"CommentStreams"
+	"CreateUserPage"
 	"DisplayTitle"
 	"EmailAuthorization"
 	"ExternalData"
+	"HeaderTabs"
 	"JSBreadCrumbs"
 	"MagicNoCache"
 	"OpenIDConnect"
@@ -72,7 +73,7 @@ COMPOSER_EXTENSIONS=(
 	"mediawiki/user-functions:2.7.0"
 )
 
-GIT_URL="https://gerrit.wikimedia.org/r/mediawiki/extensions/"
+GIT_URL="https://gerrit.wikimedia.org/r/mediawiki/extensions"
 
 case $MW_VERSION in
 	1.31)
@@ -109,3 +110,5 @@ do
 	echo $i
 	docker exec -it -w ${MW_DIR} wikifarm-${MW_VERSION} sh -c "composer require $i"
 done
+
+docker exec -it wikifarm-${MW_VERSION} sh -c "chown -R www-data.www-data /var/www/wikifarm/extensions"

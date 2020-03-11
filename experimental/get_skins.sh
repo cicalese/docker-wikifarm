@@ -24,7 +24,7 @@ COMPOSER_SKINS=(
 	"mediawiki/chameleon-skin:2.1.0"
 )
 
-GIT_URL="https://gerrit.wikimedia.org/r/mediawiki/skins/"
+GIT_URL="https://gerrit.wikimedia.org/r/mediawiki/skins"
 
 case $MW_VERSION in
 	1.31)
@@ -67,3 +67,5 @@ if [ "${#COMPOSER_SKINS[@]}" -gt 0 ]; then
 		docker exec -it -w ${MW_DIR} wikifarm-${MW_VERSION} sh -c "composer require $i"
 	done
 fi
+
+docker exec -it wikifarm-${MW_VERSION} sh -c "chown -R www-data.www-data /var/www/wikifarm/skins"
