@@ -2,7 +2,9 @@
 docker-wikifarm uses docker compose to build and manage MediaWiki wiki farms.
 It optionally supports multiple MediaWiki versions side by side. The wiki farms
 run in two (or more) docker containers: one for the database and one for each
-MediaWiki version (including the web server and MediaWiki).
+MediaWiki version (including the web server and MediaWiki). The MediaWiki
+containers build upon the official MediaWiki Docker images, if an appropriate
+image exists for the desired version, at https://hub.docker.com/_/mediawiki.
 
 ## Files
 The repo has the following directories:
@@ -16,7 +18,7 @@ They include:
 version (1.31, 1.32, 1.33, 1.34, or master)
 1. `build_all.sh`: build the wiki farm containers for all supported
 MediaWiki versions
-1. `create_wiki.sh`: create a wiki on the wikifarm
+1. `create_wiki.sh`: create a wiki on the wiki farm
 1. `mk-favicon.sh`: creates a `favicon.ico` file from the `logo.png` file for
 a wiki
 1. `move_wiki.sh`: move a wiki from one wiki farm container to another
@@ -36,33 +38,41 @@ prune unused containers
 ### config
 
 This directory contains files that can be edited before the wiki farm is built
-to specify the configuration. They include:
+to specify the configuration. Currently there is a single config file:
 
 1. `variables.env`: environment variables that will be used in the containers
-1. `Config.php`: MediaWiki configuration
 
 ### volumes
 
 This directory contains volumes that are shared between the host and the
-wikifarm container. They include:
+wiki farm container. They include:
 
-1. `config`: MediaWiki configuration files, including `Config.php`, which is
-copied from the `config` directory to the `volumes/config` directory by
-build_wikifarm.sh
-1. `instances`: instance files for the wikis, including configuration, branding
-(i.e. logo and favicon), and images
-1. `extensions`: the extensions directory, allowing management of extensions
-on the host
+1. `instances`: instance files for the wikis, including per wiki configuration,
+branding (i.e. logo and favicon), and images
 1. `backups`: wiki SQL dumps created by the `backup_wiki_database.sh` script 
+1. `mediawiki`: wiki configuration per MediaWiki version
+
+The `mediawiki` directory listed above will contain one directory for each
+MediaWiki version that has been built. Those subdirectories will in turn each
+contain the following subdirectories:
+1. `config`: MediaWiki configuration files, including `Config.php`, which
+contains basic configuration for the wiki farm and can be edited to tweak
+the wiki farm configuration. In addition, WikiFarmExtensions.php and
+WikiFarmSkins.php can be edited to enable extensions and skins for all wikis
+on the wiki farm.
+1. `extensions`: the extensions directory containing the downloaded code of
+the installed extensions
+1. `skins`: the skins directory containing the downloaded code of the
+installed skins
 
 ### wikifarm
 
-This directory contains the files that are necessary to build the wikifarm
+This directory contains the files that are necessary to build the wiki farm
 container.
 
-## Building the wikifarm
+## Building the wiki farm
 
-To build the wikifarm, do the following:
+To build the wiki farm, do the following:
 
 1. Edit the files in the `config` directory at the top level of the repository.
 Especially change the passwords in `config/variables.env`.
@@ -70,9 +80,9 @@ Especially change the passwords in `config/variables.env`.
 takes two parameters: the MediaWiki version (i.e. 1.31, 1.32, 1.33, 1.34, or
 master) and the host port to use to communicate with the wiki farm web server.
 
-## Creating a wiki on the wikifarm
+## Creating a wiki on the wiki farm
 
-To add a new wiki to the wikifarm, do the following:
+To add a new wiki to the wiki farm, do the following:
 
 1. Run the `create_wiki.sh` script from the scripts directory. It takes two
 parameters: the MediaWiki version of the wiki farm (i.e. 1.31, 1.32, 1.33,
